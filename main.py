@@ -1,4 +1,3 @@
-from audioop import bias
 import math
 import random
 
@@ -41,14 +40,33 @@ def readFile():
     startLine = 3
     data = []
     temp = []
+    listOfAllData = []
     desireOutput = []
     for line in Lines:
         count += 1
         if count > startLine-1 :
             temp = line.strip('\n').split('\t')
+            temp = [float(x) for x in temp]
+            listOfAllData.extend(temp)
+    temp = []
+    count = 0
+    minVal = min(listOfAllData)
+    maxVal = max(listOfAllData)
+    for line in Lines:
+        count += 1
+        if count > startLine-1 :
+            temp = line.strip('\n').split('\t')
+            temp = [float(x) for x in temp]
+            temp = normData(temp,minVal,maxVal)
             desireOutput.append(temp.pop()) 
             data.append(temp)
     return data,desireOutput
+
+def normData(list,minVal,maxVal):
+    temp =[]
+    for n in list:
+        temp.append((n-minVal)/(maxVal-minVal))
+    return temp
 
 layers = [8,5,3,2,1]
 bias = 1
