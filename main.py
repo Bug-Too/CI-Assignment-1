@@ -73,7 +73,7 @@ bias = 1
 weights = initWeight(layers)
 data, desireOutput = readFile()
 initActivationVal = initActivation(layers)
-# for debug
+# for debug.
 print(weights)
 print(data, len(data))
 print(desireOutput, len(desireOutput))
