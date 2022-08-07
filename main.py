@@ -22,16 +22,8 @@ def initWeight(layers):
         tempWeight = []
     return weights
 
-def initActivation(layers):
-    initVal = 1
-    initActivationVal = []
-    temp = [] 
-    for layer in layers:
-        for i in range(layer):
-            temp.append(initVal)
-        initActivationVal.append(temp)
-        temp = []
-    return initActivationVal
+def multiplyMatrix(X,Y):
+    return [[sum(a*b for a,b in zip(X_row,Y_col)) for Y_col in zip(*Y)] for X_row in X]
 
 def readFile():
     File1 = open('/home/pooh/Documents/CI/HW1/CI-Assignment-1/Flood_dataset.txt', 'r')
@@ -60,7 +52,7 @@ def readFile():
             temp = normData(temp,minVal,maxVal)
             desireOutput.append(temp.pop()) 
             data.append(temp)
-    return data,desireOutput
+    return data,desireOutput,minVal,maxVal
 
 def normData(list,minVal,maxVal):
     temp =[]
@@ -68,13 +60,68 @@ def normData(list,minVal,maxVal):
         temp.append((n-minVal)/(maxVal-minVal))
     return temp
 
+
+
 layers = [8,5,3,2,1]
 bias = 1
 weights = initWeight(layers)
-data, desireOutput = readFile()
-initActivationVal = initActivation(layers)
+data, desireOutput, minVal, maxVal = readFile()
+
+def initActivation(layers):
+    initVal = 1
+    initActivationVal = []
+    temp = [] 
+    for layer in layers:
+        for i in range(layer):
+            temp.append(initVal)
+        initActivationVal.append(temp)
+        temp = []
+
+    for i in range(layers[0]):
+        initActivationVal[0][i] = data[i]
+    
+    return initActivationVal
+
+
+activationVal = initActivation(layers)
+
+
+
 # for debug.
-print(weights)
+# print(weights)
 print(data, len(data))
-print(desireOutput, len(desireOutput))
-print(initActivationVal)
+# print(desireOutput, len(desireOutput))
+# print(activationVal)
+# print(minVal,maxVal)
+print(activationVal)
+
+
+
+
+# !!! Pass by ref func
+def feedForward(data,layers,bias):
+    for i in range(len(weights)):
+        multiplyMatrix(weights[i],layers[i])
+        temp = []
+        
+    
+    # for i in range(len(layers)-1):
+    #     for j in range(layers(i+1)):
+    #         activationVal[i+1][j] = sigmoid()
+    # return 
+
+def backWard():
+    return 0
+
+SSE = 100
+epsilon = 0.01
+maxEpoch = 0
+t = 0
+
+
+while SSE > epsilon and t < maxEpoch:
+    for i in range(len(data)):
+        feedForward()
+        backWard()
+    
+
