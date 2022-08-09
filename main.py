@@ -2,10 +2,17 @@ import math
 import random
 
 def sigmoid(x):
-    return 1 / (1 + math.exp(-x))
+    temp = []
+    for v in x:
+        temp.append(1 / (1 + math.exp(-v)))
+    return temp
 
-def relu(x):
-    return max(0,x)
+def sigmoidPrime(x):
+    temp = []
+    for v in x:
+        temp.append((1 / (1 + math.exp(-v)))*(1-(1 / (1 + math.exp(-v)))))
+    return temp
+
 
 def initWeight(layers):
     weights = []
@@ -60,8 +67,6 @@ def normData(list,minVal,maxVal):
         temp.append((n-minVal)/(maxVal-minVal))
     return temp
 
-
-
 layers = [8,5,3,2,1]
 bias = 1
 weights = initWeight(layers)
@@ -77,19 +82,17 @@ def initActivation(layers):
         initActivationVal.append(temp)
         temp = []
 
-    for i in range(layers[0]):
-        initActivationVal[0][i] = data[i]
-    
     return initActivationVal
 
 
 activationVal = initActivation(layers)
+VVal = initActivation(layers)
 
 
 
 # for debug.
 # print(weights)
-print(data, len(data))
+# print(data[0], len(data))
 # print(desireOutput, len(desireOutput))
 # print(activationVal)
 # print(minVal,maxVal)
@@ -99,11 +102,22 @@ print(activationVal)
 
 
 # !!! Pass by ref func
-def feedForward(data,layers,bias):
-    for i in range(len(weights)):
-        multiplyMatrix(weights[i],layers[i])
-        temp = []
-        
+def feedForward(data,bias):
+    epouch = 0
+    sumSquaredError = 0
+    for j in range(len(data)):
+        epouch += 1
+        for i in range(len(weights)):
+            activationVal[0] = data[j]
+            VVal[0] = data[j]
+            i += 1
+            v = multiplyMatrix(weights[i],activationVal[i])
+            v = v+([bias]*len(v))
+            VVal[i+1] = v
+            activationVal[i+1] = sigmoid(v)
+        sumSquaredError += (desireOutput[j] - activationVal[-1][0])**2
+    return sumSquaredError
+
     
     # for i in range(len(layers)-1):
     #     for j in range(layers(i+1)):
@@ -111,17 +125,27 @@ def feedForward(data,layers,bias):
     # return 
 
 def backWard():
+
     return 0
 
-SSE = 100
+
+def findSSEAvg(sumError,N):
+    return sumError/N
+
+
+
+
 epsilon = 0.01
-maxEpoch = 0
+maxEpoch = 5000
 t = 0
+sumSquaredErrorAvg = 0
 
 
-while SSE > epsilon and t < maxEpoch:
-    for i in range(len(data)):
-        feedForward()
-        backWard()
-    
+
+# while sumSquaredErrorAvg > epsilon and t < maxEpoch:
+#     t += 1
+#     for i in range(len(data)):
+#         sumSquaredErrorAvg += feedForward(data,bias)
+#         backWard()
+#     sumSquaredErrorAvg = sumSquaredErrorAvg / len(data)
 
