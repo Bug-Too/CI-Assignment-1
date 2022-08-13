@@ -149,3 +149,8 @@ sumSquaredErrorAvg = 0
 #         backWard()
 #     sumSquaredErrorAvg = sumSquaredErrorAvg / len(data)
 
+
+#localGradOutput = error - sigmoidPrime(VVal[-1])
+
+#localGradHidden = sigmoidPrime(VVal[i])*sum(localGrad[i+1]*weights[i][i+1])
+
