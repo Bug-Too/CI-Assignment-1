@@ -6,12 +6,23 @@ class MLP():
 
 
 
-    def __init__(self,layers,weights,bias,maxEpoch,epsilon) -> None:
+    def __init__(self,layers,bias,maxEpoch,epsilon,filePath,startLine) -> None:
+        file = readFile(filePath,startLine)
+        self.data = file.data
+        self.desireOutput = file.desireOutput
+        # self.minVal = file.minVal
+        # self.maxVal = file.maxVal
+
         self.layers = layers
-        self.weights = weights
         self.bias = bias
         self.maxEpoch = maxEpoch
         self.epsilon = epsilon
+
+        network = initalNetwork(layers)
+        self.weights = network.initWeight()
+        self.nodeValue = network.initActivation()
+        self.inputNode = network.initActivation()
+
 
 
 
@@ -21,20 +32,20 @@ class MLP():
     sumSquaredErrorAvg = 0
 
 
-    def feedForward(data,bias):
+    def feedForward(self):
         epouch = 0
         sumSquaredError = 0
-        for j in range(len(data)):
+        for j in range(len(self.data)):
             epouch += 1
-            for i in range(len(weights)):
-                activationVal[0] = data[j]
-                VVal[0] = data[j]
+            for i in range(len(self.weights)):
+                self.nodeValue[0] = self.data[j]
+                self.inputNode[0] = self.data[j]
                 i += 1
-                v = multiplyMatrix(weights[i],activationVal[i])
-                v = v+([bias]*len(v))
-                VVal[i+1] = v
-                activationVal[i+1] = sigmoid(v)
-            sumSquaredError += (desireOutput[j] - activationVal[-1][0])**2
+                v = mathOperation.multiplyMatrix(self.weights[i],self.nodeValue[i])
+                v = v+([self.bias]*len(v))
+                self.inputNode[i+1] = v
+                self.nodeValue[i+1] = mathOperation.sigmoid(v)
+            sumSquaredError += ((self.desireOutput[j] - self.nodeValue[-1][0])**2)
         return sumSquaredError
     
     def backPropagation(self):
