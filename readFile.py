@@ -27,7 +27,7 @@ class readFile():
                 temp = line.strip('\n').split('\t')
                 temp = [float(x) for x in temp]
                 temp = self.normData(temp,minVal,maxVal)
-                desireOutput.append(temp.pop()) 
+                desireOutput.append([temp.pop()]) 
                 data.append(temp)
         self.data = data
         self.desireOutput = desireOutput

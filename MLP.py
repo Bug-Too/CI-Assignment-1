@@ -26,6 +26,7 @@ class MLP():
 
         network = initalNetwork(layers)
         self.weights = network.initWeight()
+        self.weightsChange = []
         self.nodeValue = network.initActivation()
         self.inputNode = network.initActivation()
         self.grad = network.initActivation()
@@ -51,11 +52,14 @@ class MLP():
         self.listOfError.append(self.findError(positionOfData))
 
     def findError(self,positionOfData):
-        return self.nodeValue[-1][0] - self.desireOutput[positionOfData]
+        temp = []
+        for i in range(len(self.nodeValue[-1])):
+            temp.append(self.nodeValue[-1][i] - self.desireOutput[positionOfData][i])
+        return temp
 
-    def findGrad(self):
+    def findGrad(self,outputPosition):
         #output
-        self.grad[-1] = self.listOfError[-1]*mathOperation.diffActivationFunc(self.inputNode[-1])
+        self.grad[-1] = self.listOfError[-1][outputPosition]*mathOperation.diffActivationFunc(self.inputNode[-1])
         #hidden
         i = len(self.grad) - 1
         while(i>0): 
@@ -75,6 +79,21 @@ class MLP():
 
 
     def backPropagation(self):
-        self.findGrad()
-
-        return
+        for i in range(self.layers[-1]):
+            self.findGrad(i)
+        
+    
+    def findWeightChange(self,epoch):
+        if epoch == 1 :
+            self.weightsChange.append(initalNetwork.initWeight())
+            for i in range(len(self.weights)):
+                for j in range(len(self.weights[i])):
+                    for k in range(len(self.weights[i][j])):
+                        self.weightsChange[-1][i][j][k] = self.learningRate*self.grad[i+1][j]*self.nodeValue[i][j]
+        else:
+            self.weightsChange.append(initalNetwork.initWeight())
+            for i in range(len(self.weights)):
+                for j in range(len(self.weights[i])):
+                    for k in range(len(self.weights[i][j])):
+                        self.weightsChange[-1][i][j][k] = self.momentumRate * self.weightsChange[-2][i][j][k] + self.learningRate*self.grad[i+1][j]*self.nodeValue[i][j]
+    
