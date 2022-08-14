@@ -83,7 +83,7 @@ class MLP():
             self.findGrad(i)
         
     
-    def updateChange(self,epoch):
+    def updateWeight(self,epoch):
         if epoch == 1 :
             self.weightsChange.append(initalNetwork.initWeight())
             for i in range(len(self.weights)):
