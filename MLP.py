@@ -83,17 +83,18 @@ class MLP():
             self.findGrad(i)
         
     
-    def findWeightChange(self,epoch):
+    def updateChange(self,epoch):
         if epoch == 1 :
             self.weightsChange.append(initalNetwork.initWeight())
             for i in range(len(self.weights)):
                 for j in range(len(self.weights[i])):
                     for k in range(len(self.weights[i][j])):
                         self.weightsChange[-1][i][j][k] = self.learningRate*self.grad[i+1][j]*self.nodeValue[i][j]
+                        self.weights[i][j][k] += self.weightsChange[-1][i][j][k]
         else:
             self.weightsChange.append(initalNetwork.initWeight())
             for i in range(len(self.weights)):
                 for j in range(len(self.weights[i])):
                     for k in range(len(self.weights[i][j])):
                         self.weightsChange[-1][i][j][k] = self.momentumRate * self.weightsChange[-2][i][j][k] + self.learningRate*self.grad[i+1][j]*self.nodeValue[i][j]
-    
+                        self.weights[i][j][k] += self.weightsChange[-1][i][j][k]
