@@ -3,7 +3,6 @@ from readFile import readFile
 from initialNetwork import initalNetwork
 import random
 
-
 class MLP():
 
     def __init__(self, layers, bias, learningRate, momentumRate, maxEpoch, epsilon, filePath, startLine) -> None:
@@ -37,50 +36,55 @@ class MLP():
             temp = mathOperation.addBias(temp,self.bias)
             self.inputNode[i + 1] = temp
             self.nodeValue[i + 1] = mathOperation.sigmoid(temp)
+
         self.listOfError.append(self.findError(positionOfData))
 
     def findError(self, positionOfData):
         temp = []
         for i in range(len(self.nodeValue[-1])):
-            temp.append(self.nodeValue[-1][i] - self.desireOutput[positionOfData][i])
+            temp.append( self.desireOutput[positionOfData][i] - self.nodeValue[-1][i][0] )
         return temp
 
     def findsumSquaredErrorAvg(self):
-        return sum(i * i for i in self.listOfError)
+        sum = 0
+        for i in self.listOfError:
+            sum += i[0]**2
+        return sum/len(self.listOfError)
 
     def findGrad(self, outputPosition):
         # output
-        self.grad[-1] = self.listOfError[-1][outputPosition] * mathOperation.diffActivationFunc(self.inputNode[-1])
+        self.grad[-1][outputPosition] = [self.listOfError[-1][outputPosition] * mathOperation.diffActivationFunc(self.inputNode[-1][outputPosition])[0]]
         # hidden
-        i = len(self.grad) - 1
-        while (i > 0):
-            j = len(self.grad[i])
-            while (j > 0):
-                self.grad[i][j] = self.sumOfProductOfWeightAndGrad(i, j)
-                j = j - 1
+        i = len(self.grad) - 2
+        while (i >= 0):
+            j = 0
+            while (j <  len(self.grad[i])):
+                self.grad[i][j] = [self.sumOfProductOfWeightAndGrad(i, j)]
+                j = j + 1
             i = i - 1
 
     def sumOfProductOfWeightAndGrad(self, iPosition, jPosition):
         sum = 0
         for k in range(len(self.grad[iPosition + 1])):
-            sum += self.weights[iPosition][jPosition][k] * self.grad[iPosition + 1][k]
+            #print(mathOperation.transpose(self.weights[iPosition]))
+            sum += mathOperation.transpose(self.weights[iPosition])[jPosition][k] * self.grad[iPosition+1][k][0]
         return sum
 
     def updateWeight(self, epoch):
-        if epoch == 1:
-            self.weightsChange.append(initalNetwork.initWeight())
+        if epoch == 0:
+            self.weightsChange.append(initalNetwork.initWeight(self))
             for i in range(len(self.weights)):
                 for j in range(len(self.weights[i])):
                     for k in range(len(self.weights[i][j])):
-                        self.weightsChange[-1][i][j][k] = self.learningRate * self.grad[i + 1][j] * self.nodeValue[i][j]
+                        self.weightsChange[-1][i][j][k] = self.learningRate * self.grad[i + 1][j][0] * self.nodeValue[i][j][0]
                         self.weights[i][j][k] += self.weightsChange[-1][i][j][k]
         else:
-            self.weightsChange.append(initalNetwork.initWeight())
+            self.weightsChange.append(initalNetwork.initWeight(self))
             for i in range(len(self.weights)):
                 for j in range(len(self.weights[i])):
                     for k in range(len(self.weights[i][j])):
                         self.weightsChange[-1][i][j][k] = self.momentumRate * self.weightsChange[-2][i][j][
-                            k] + self.learningRate * self.grad[i + 1][j] * self.nodeValue[i][j]
+                            k] + self.learningRate * self.grad[i + 1][j][0] * self.nodeValue[i][j][0]
                         self.weights[i][j][k] += self.weightsChange[-1][i][j][k]
 
     def backPropagation(self, epoch):
@@ -89,15 +93,17 @@ class MLP():
             self.updateWeight(epoch)
 
     def trainModel(self):
-        floodData = self.data
         epoch = 0
         sumSquaredErrorAvg = 1
-        while sumSquaredErrorAvg > self.epsilon and epoch <= self.maxEpoch:
-            sumSquaredErrorAvg = self.findsumSquaredErrorAvg()
-            for i in range(len(self.data)):
-                randomPosition = random.randrange(len(floodData))
-                self.feedForward(randomPosition)
+        randomListPosition = list(range(0, len(self.data)))
+        random.shuffle(randomListPosition)
+
+        while sumSquaredErrorAvg > self.epsilon and epoch < self.maxEpoch:
+            for dataPosition in randomListPosition:
+                self.feedForward(dataPosition)
                 self.backPropagation(epoch)
+
             sumSquaredErrorAvg = self.findsumSquaredErrorAvg()
             epoch += 1
-            print('SSE AVG:', sumSquaredErrorAvg, ' Epoch:', epoch)
+            random.shuffle(randomListPosition)
+            print('Error:',self.listOfError[-1],' SSE AVG:', sumSquaredErrorAvg, ' Epoch:', epoch)

@@ -11,7 +11,7 @@ class initalNetwork():
         weights = []
         tempRand = []
         tempWeight = []
-        for i in range(len(self.layers)-1):
+        for i in range(len(self.layers) - 1):
             for j in range(self.layers[i+1]):
                 for k in range(self.layers[i]):
                     tempRand.append(random.random())
