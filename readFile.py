@@ -36,7 +36,7 @@ class readFile():
 
 
 
-    def normData(list,minVal,maxVal):
+    def normData(self,list,minVal,maxVal):
         temp =[]
         for n in list:
             temp.append((n-minVal)/(maxVal-minVal))

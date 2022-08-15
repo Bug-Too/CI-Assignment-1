@@ -3,7 +3,7 @@ import random
 class initalNetwork():
     
     def __init__(self,layers) -> None:
-        self.layer = layers
+        self.layers = layers
         self.weight = self.initWeight()
         self.node = self.initActivation()
 
@@ -12,8 +12,8 @@ class initalNetwork():
         tempRand = []
         tempWeight = []
         for i in range(len(self.layers)-1):
-            for j in range(self.layers[i]):
-                for k in range(self.layers[i+1]):
+            for j in range(self.layers[i+1]):
+                for k in range(self.layers[i]):
                     tempRand.append(random.random())
                 tempWeight.append(tempRand)
                 tempRand = []
@@ -27,7 +27,7 @@ class initalNetwork():
         temp = [] 
         for layer in self.layers:
             for i in range(layer):
-                temp.append(initVal)
+                temp.append([initVal])
             initActivationVal.append(temp)
             temp = []
         return initActivationVal

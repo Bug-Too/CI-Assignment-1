@@ -5,7 +5,7 @@ class mathOperation():
     def sigmoid(x):
         temp = []
         for v in x:
-            temp.append(1 / (1 + math.exp(-v)))
+            temp.append([1 / (1 + math.exp(-v[0]))])
         return temp
 
     @staticmethod
@@ -18,7 +18,7 @@ class mathOperation():
     @staticmethod
     def activationFunc(list):
         return mathOperation.sigmoid(list)
-    
+
     @staticmethod
     def diffActivationFunc(list):
         return mathOperation.sigmoidPrime(list)
@@ -32,4 +32,15 @@ class mathOperation():
         temp =[]
         for n in list:
             temp.append((n-minVal)/(maxVal-minVal))
+        return temp
+
+    @staticmethod
+    def transpose(list):
+        return [[list[j][i] for j in range(len(list))] for i in range(len(list[0]))]
+
+    @staticmethod
+    def addBias(list,bias):
+        temp = []
+        for n in list:
+            temp.append([n[0]+bias])
         return temp
