@@ -5,14 +5,14 @@ class mathOperation():
     def sigmoid(x):
         temp = []
         for v in x:
-            temp.append([1 / (1 + math.exp(-v[0]))])
+            temp.append([1.0 / (1.0 + math.exp(-v[0]))])
         return temp
 
     @staticmethod
     def sigmoidPrime(x):
         temp = []
         for v in x:
-            temp.append((1 / (1 + math.exp(-v)))*(1-(1 / (1 + math.exp(-v)))))
+            temp.append((1.0 / (1.0 + math.exp(-v)))*(1.0 - (1.0 / (1.0 + math.exp(-v)))))
         return temp
 
     @staticmethod
