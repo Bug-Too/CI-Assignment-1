@@ -2,17 +2,26 @@ import math
 
 class mathOperation():
     @staticmethod
+    def exp(x):
+        e = 2.718281828459045
+        if(x<=700):
+            return e**x
+        else:
+            return math.inf
+        
+
+    @staticmethod
     def sigmoid(x):
         temp = []
         for v in x:
-            temp.append([1.0 / (1.0 + math.exp(-v[0]))])
+            temp.append([1.0 / (1.0 + mathOperation.exp(-v[0]))])
         return temp
 
     @staticmethod
     def sigmoidPrime(x):
         temp = []
         for v in x:
-            temp.append((1.0 / (1.0 + math.exp(-v)))*(1.0 - (1.0 / (1.0 + math.exp(-v)))))
+            temp.append((1.0 / (1.0 + mathOperation.exp(-v)))*(1.0 - (1.0 / (1.0 + mathOperation.exp(-v)))))
         return temp
 
     @staticmethod
