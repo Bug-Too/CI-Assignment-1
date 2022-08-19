@@ -117,6 +117,6 @@ class MLP():
             random.shuffle(randomListPosition)
             print(' SSE AVG:', sumSquaredErrorAvg, ' Epoch:', epoch ,' Error:',self.listOfError[-1])
 
-    def validate(self):
+    def validateFloodDataset(self):
         for p in self.validationData:
             self.feedForward(True)

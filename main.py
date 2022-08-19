@@ -3,8 +3,8 @@ from MLP import MLP
 # Control Variable
 filePath = 'Flood_dataset.txt'
 layers = [8, 5, 3, 2, 1]
-epsilon = 0.0005
-maxEpoch = 50000
+epsilon = 0.0006
+maxEpoch = 5000
 bias = 1
 
 
