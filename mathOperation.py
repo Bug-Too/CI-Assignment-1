@@ -12,25 +12,39 @@ class mathOperation():
 
     @staticmethod
     def sigmoid(x):
-        temp = []
-        for v in x:
-            temp.append([1.0 / (1.0 + mathOperation.exp(-v[0]))])
-        return temp
+        return 1.0 / (1.0 + mathOperation.exp(0 - x))
 
     @staticmethod
     def sigmoidPrime(x):
-        temp = []
-        for v in x:
-            temp.append((1.0 / (1.0 + mathOperation.exp(-v)))*(1.0 - (1.0 / (1.0 + mathOperation.exp(-v)))))
-        return temp
+        return (1.0 / (1.0 + mathOperation.exp(-x)))*(1.0 - (1.0 / (1.0 + mathOperation.exp(-x))))
+
+    @staticmethod
+    def leakyRelu(x):
+        if x < 0:
+            return 0.01 * x
+        else:
+            return x
+
+    @staticmethod
+    def leakyReluPrime(x):
+        if x <= 0:
+            return 0.01
+        else:
+            return 1
 
     @staticmethod
     def activationFunc(list):
-        return mathOperation.sigmoid(list)
+        temp = []
+        for v in list:
+            temp.append([mathOperation.leakyRelu(v[0])])
+        return temp
 
     @staticmethod
     def diffActivationFunc(list):
-        return mathOperation.sigmoidPrime(list)
+        temp = []
+        for v in list:
+            temp.append(mathOperation.leakyReluPrime(v))
+        return temp
 
     @staticmethod
     def multiplyMatrix(X,Y):

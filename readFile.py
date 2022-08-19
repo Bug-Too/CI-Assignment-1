@@ -30,6 +30,12 @@ class readFile():
                 desireOutput.append([temp.pop()]) 
                 data.append(temp)
         self.data = data
+        self.validationData = []
+        self.trainingData = data
+        for i in range(int(len(data)/10)):
+            self.validationData.append(data[-i])
+            self.trainingData.pop()
+
         self.desireOutput = desireOutput
         self.minVal = minVal
         self.maxVal = maxVal
