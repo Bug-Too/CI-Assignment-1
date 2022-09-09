@@ -58,6 +58,13 @@ class mathOperation():
         return temp
 
     @staticmethod
+    def deNormData(list, minVal, maxVal):
+        temp = []
+        for n in list:
+            temp.append(n*(maxVal-minVal)+minVal)
+        return temp
+
+    @staticmethod
     def transpose(list):
         return [[list[j][i] for j in range(len(list))] for i in range(len(list[0]))]
 
